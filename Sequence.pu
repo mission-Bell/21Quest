@@ -1,0 +1,59 @@
+@startuml
+title 21Quest (gameStart)
+Player -> TOQusetReceptionController: gameStart()
+TOQusetReceptionController -> CardManagerService: createCardDeck()
+Player <- TOQusetReceptionController: TOQuestPlayerModel
+@enduml
+
+@startuml
+title 21Quest (gameContinue)
+Player -> TOQusetReceptionController: gameContinue()
+TOQusetReceptionController -> CardManagerService: createCardDeck()
+Player <- TOQusetReceptionController: TOQuestPlayerModel
+@enduml
+
+@startuml
+title 21Quest (gamefinish)
+Player -> TOQusetReceptionController: gamefinish()
+Player <- TOQusetReceptionController: String
+@enduml
+
+@startuml
+title 21Quest (cardsDistribute)
+Player -> TOQusetReceptionController: cardsDistribute()
+TOQusetReceptionController -> BrackJackRuleService: cardsDistribute()
+BrackJackRuleService -> CardManagerService: cardsDistribute(2) #Player
+BrackJackRuleService <- CardManagerService: List<TOQuestCardsModel>
+BrackJackRuleService -> CardManagerService: cardsDistribute(2) #Master
+BrackJackRuleService <- CardManagerService: List<TOQuestCardsModel>
+TOQusetReceptionController <- BrackJackRuleService: List<TOQuestBaseModel>
+Player <- TOQusetReceptionController: List<TOQuestBaseModel>
+@enduml
+
+@startuml
+title 21Quest (cardsRedistribute)
+Player -> TOQusetReceptionController: cardsRedistribute()
+TOQusetReceptionController -> BrackJackRuleService: cardsRedistribute()
+BrackJackRuleService -> CardManagerService: cardsDistribute(1) #Player
+BrackJackRuleService <- CardManagerService: List<TOQuestCardsModel>
+BrackJackRuleService -> BrackJackRuleService: cardPointTally(),int
+BrackJackRuleService -> BrackJackRuleService: isBurst(),boolean
+TOQusetReceptionController <- BrackJackRuleService: TOQuestPlayerModel
+Player <- TOQusetReceptionController: TOQuestPlayerModel
+@enduml
+
+@startuml
+title 21Quest (cardsOpen)
+Player -> TOQusetReceptionController: cardsOpen()
+TOQusetReceptionController -> BrackJackRuleService: cardsRedistribute()
+BrackJackRuleService -> CardManagerService: cardsDistribute(1) #Master
+BrackJackRuleService <- CardManagerService: List<TOQuestCardsModel>
+BrackJackRuleService -> BrackJackRuleService: cardPointTally(),int
+BrackJackRuleService -> BrackJackRuleService: isBurst(),boolean
+BrackJackRuleService -> BrackJackRuleService: isWinner(),boolean
+BrackJackRuleService -> BrackJackRuleService: moneyCalc(),void
+TOQusetReceptionController <- BrackJackRuleService: List<TOQuestBaseModel>
+Player <- TOQusetReceptionController: List<TOQuestBaseModel>
+@enduml
+
+

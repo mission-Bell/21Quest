@@ -1,0 +1,81 @@
+<!-- 画面テスト用HTML -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <title>Ajax通信の例</title>
+    <script>
+        $(function() {
+            $('.sendButton').click(function(event) {
+                // 送信先のURL
+                var apiUrl = '/game/beginning'; // 送信先のRestAPIのURLを指定してください
+
+                var targetId = event.target.id;
+
+                switch (targetId) {
+
+                case "gameStart":
+                apiUrl = "/game/beginning";
+                break;
+
+                case "gameContinue":
+                apiUrl = "/game/continuation";
+                break;
+
+                case "gameFinish":
+                apiUrl = "/game/ending";
+                break;
+
+                case "cardDistribute":
+                apiUrl = "/cards/distribution";
+                break;
+
+                case "cardRedistribute":
+                apiUrl = "/cards/redistribution";
+                break;
+
+                case "cardOpen":
+                apiUrl = "/cards/disclosure";
+                break;
+
+            }
+                
+                // 送信するデータ（必要に応じて変更）
+                var requestData = {
+                    key1: 'value1',
+                    key2: 'value2'
+                };
+    
+                // Ajaxリクエスト
+                $.ajax({
+                    type: 'GET', // HTTPメソッド（GETやPOSTなど）
+                    url: apiUrl, // 送信先のURL
+                    success: function(response) {
+                        // 成功時の処理
+                        console.log('成功:', response);
+                        // 画面にJSONデータを表示
+                        $('#responseContainer').text(JSON.stringify(response, null, 2));
+                    },
+                    error: function(xhr, status, error) {
+                        // エラー時の処理
+                        console.error('エラー:', status, error);
+                    }
+                });
+            });
+        });
+    </script>
+    
+</head>
+<body>
+    <button class="sendButton" id="gameStart">ゲーム開始</button>
+    <button class="sendButton" id="gameContinue">ゲーム続行</button>
+    <button class="sendButton" id="gameFinish">ゲーム終了</button>
+    <button class="sendButton" id="cardDistribute">カード配布</button>
+    <button class="sendButton" id="cardRedistribute">カード再配布</button>
+    <button class="sendButton" id="cardOpen">カードオープン</button>
+
+    <div id="responseContainer"></div>
+</body>
+</html>

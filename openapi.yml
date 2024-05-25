@@ -1,0 +1,171 @@
+openapi: "3.0.3"
+
+info:
+  title: "21Quest" 
+  version: "1.0.0"
+
+paths: 
+  "/health":
+    get:
+      summary: "check health"
+      description: "通信可能かどうか返事をする"
+      responses: 
+        "200":
+          $ref: "#components/responses/healthyStatus"
+        "4XX":
+          $ref: "#components/responses/clientError"
+        "5XX":
+          $ref: "#components/responses/serverError"
+  "/game/beginning":
+    get:
+      summary: "start the game"
+      description: "プレイヤーに所持金を配布しスタート初期処理を行う"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  money:
+                    $ref: "#components/schemas/money"
+                  messages:
+                   $ref: "#components/schemas/messages"
+        "4XX":
+          $ref: "#components/responses/clientError"
+        "5XX":
+          $ref: "#components/responses/serverError"
+  "/game/continuation":
+    get:
+      summary: "continue the game"
+      description: "ゲームを続けます"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  money:
+                    $ref: "#components/schemas/money"
+                  messages:
+                   $ref: "#components/schemas/messages"
+
+  "/game/ending":
+    get:
+      summary: "end the game"
+      description: "ゲームを終了します"
+      responses:
+        "200":
+          description: ""
+          content:
+           application/json:
+             schema:
+                type: "object"
+                properties:
+                  messages:
+                    $ref: "#components/schemas/messages"
+
+        "4XX":
+          $ref: "#components/responses/clientError"
+        "5XX":
+          $ref: "#components/responses/serverError"
+  "/cards/disclosure":
+    get:
+      summary: "disclose cards"
+      description: "カードを開示します"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  playerCards:
+                    $ref: "#components/schemas/playerCards"
+                  cardMasterCards:
+                    $ref: "#components/schemas/cardMasterCards"                   
+                  isWin: 
+                    $ref: "#components/schemas/isWin"
+                  messages:
+                    $ref: "#components/schemas/messages"
+                  money:
+                    $ref: "#components/schemas/money"
+        "4XX":
+          $ref: "#components/responses/clientError"
+        "5XX":
+          $ref: "#components/responses/serverError"
+  "/cards/distribution":
+    get:
+      summary: "distribute cards"
+      description: "カードを配布します"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  playerCards:
+                    $ref: "#components/schemas/playerCards"
+                  cardMasterCards:
+                    $ref: "#components/schemas/cardMasterCards"                   
+                  isWin: 
+                    $ref: "#components/schemas/isWin"
+                  messages:
+                    $ref: "#components/schemas/messages"
+components:
+  schemas:
+    errors:
+      type: "object"
+      properties:
+        errorCode:
+          type: "integer"
+          example: 0
+        errorMessage:
+          type: "string"
+          example: ""
+    card:
+      type: "object"
+      properties:
+        suit_rank:
+          type: string
+          example: "K13"
+    playerCards:
+      type: "array"
+      items:
+        $ref: "#components/schemas/card"
+    cardMasterCards:
+      type: "array"
+      items:
+        $ref: "#components/schemas/card"
+    isWin:
+      type: "boolean"
+    messages:
+      type: "string"        
+    money:
+      type: "integer"
+      example: 1000
+  responses:
+    healthyStatus:
+      description: "接続OK!"
+      content:
+        application/json:
+          schema:
+            $ref: "#components/schemas/errors"
+    clientError:
+      description: "クライアント側の問題で発生する一般エラー"
+      content:
+        application/json:
+          schema:
+            $ref: "#components/schemas/errors"
+    serverError:
+      description: "サーバ側の問題で発生する一般エラー"
+      content:
+        application/json:
+          schema:
+            $ref: "#components/schemas/errors"
